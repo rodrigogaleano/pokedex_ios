@@ -29,13 +29,28 @@ struct PokemonDetailsView: View {
                 ProgressView("Loading...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if let pokemonDetails = viewModel.pokemonDetails {
-                Picker("Tab", selection: $selectedTab) {
-                    ForEach(Tab.allCases) { tab in
-                        Text(tab.rawValue).tag(tab)
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(spacing: 8) {
+                        ForEach(pokemonDetails.types, id: \.info.name) { type in
+                            Text(type.info.name.capitalized)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color(uiColor: .tertiarySystemFill))
+                                .clipShape(Capsule())
+                        }
                     }
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                    Picker("Tab", selection: $selectedTab) {
+                        ForEach(Tab.allCases) { tab in
+                            Text(tab.rawValue).tag(tab)
+                            
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal)
+                    .padding(.bottom, 4)
                 }
-                .pickerStyle(.segmented)
-                .padding()
                 VStack(alignment: .leading, spacing: 12) {
                     switch selectedTab {
                     case .info:

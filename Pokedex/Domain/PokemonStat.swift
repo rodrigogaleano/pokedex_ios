@@ -5,9 +5,9 @@
 //  Created by Rodrigo Galeano on 26/10/25.
 //
 
-struct Stat: Decodable {
+struct PokemonStat: Decodable {
     let baseStat: Int
-    let info: StatInfo
+    let info: PokemonStatInfo
     
     private enum CodingKeys: String, CodingKey {
         case baseStat = "base_stat"
@@ -15,6 +15,6 @@ struct Stat: Decodable {
     }
 }
 
-struct StatInfo: Decodable {
+struct PokemonStatInfo: Decodable {
     let name: String
 }

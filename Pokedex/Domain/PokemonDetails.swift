@@ -10,5 +10,6 @@ struct PokemonDetails: Decodable {
     let name: String
     let height: Int
     let weight: Int
-    let stats: [Stat]
+    let stats: [PokemonStat]
+    let types: [PokemonType]
 }
