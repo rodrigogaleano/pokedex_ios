@@ -10,6 +10,14 @@ import SwiftUI
 struct PokemonDetailsView: View {
     private var name: String
     @StateObject private var viewModel = PokemonDetailsViewModel()
+    @State private var selectedTab: Tab = .info
+    
+    private enum Tab: String, CaseIterable, Identifiable {
+        case info = "Info"
+        case stats = "Stats"
+        
+        var id: String { rawValue }
+    }
     
     init(name: String) {
         self.name = name
@@ -21,14 +29,48 @@ struct PokemonDetailsView: View {
                 ProgressView("Loading...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if let pokemonDetails = viewModel.pokemonDetails {
-                VStack {
-                    Text("Height: \(pokemonDetails.height)")
-                    Text("Weight: \(pokemonDetails.weight)")
+                Picker("Tab", selection: $selectedTab) {
+                    ForEach(Tab.allCases) { tab in
+                        Text(tab.rawValue).tag(tab)
+                    }
                 }
+                .pickerStyle(.segmented)
+                .padding()
+                VStack(alignment: .leading, spacing: 12) {
+                    switch selectedTab {
+                    case .info:
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Height: \(pokemonDetails.height)")
+                            Text("Weight: \(pokemonDetails.weight)")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                        .padding(.top, 8)
+                        
+                    case .stats:
+                        VStack(alignment: .leading, spacing: 8) {
+                            ForEach(pokemonDetails.stats, id: \.info.name) { stat in
+                                HStack(alignment: .center, spacing: 8) {
+                                    Text("\(stat.info.name.capitalized): \(stat.baseStat)")
+                                    Spacer()
+                                    ProgressView(value: Float(stat.baseStat), total: 255)
+                                        .frame(width: 180)
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                        .padding(.top, 8)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                
             } else {
-                Text("Erro ao carregar Pokémon")
+                Text("Something went wrong")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .navigationTitle(name.capitalized)
         .navigationBarTitleDisplayMode(.large)
         .onAppear {

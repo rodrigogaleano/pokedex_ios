@@ -17,27 +17,30 @@ struct HomeView: View {
                     ProgressView("Loading...")
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    List(viewModel.pokemons, id: \.name) { pokemon in
-                        NavigationLink(destination: PokemonDetailsView(name: pokemon.name)) {
-                            Text(pokemon.name.capitalized)
+                    List{
+                        ForEach(viewModel.pokemons, id: \.name) { pokemon in
+                            NavigationLink(destination: PokemonDetailsView(name: pokemon.name)) {
+                                Text(pokemon.name.capitalized)
+                            }
+                        }
+                        if viewModel.isLoadingMore {
+                            ProgressView()
+                                .scaleEffect(0.8)
+                                .padding(.vertical, 8)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        } else {
+                            Color.clear
+                                .frame(height: 1)
+                                .onAppear {
+                                    viewModel.loadMorePokemons()
+                                }
                         }
                     }
-                    if viewModel.isLoadingMore {
-                        ProgressView()
-                            .scaleEffect(0.8)
-                            .padding(.vertical, 8)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    } else {
-                        Color.clear
-                            .frame(height: 1)
-                            .onAppear {
-                                viewModel.loadMorePokemons()
-                            }
-                    }
+                    
                 }
             }
+            .navigationTitle("Pokédex")
         }
-        .navigationTitle("Pokédex")
         .onAppear {
             viewModel.getPokemons()
         }
