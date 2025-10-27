@@ -22,7 +22,6 @@ struct PokemonDetailsView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if let pokemonDetails = viewModel.pokemonDetails {
                 VStack {
-                    Text(pokemonDetails.name.capitalized)
                     Text("Height: \(pokemonDetails.height)")
                     Text("Weight: \(pokemonDetails.weight)")
                 }

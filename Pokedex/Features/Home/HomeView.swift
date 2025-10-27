@@ -22,15 +22,28 @@ struct HomeView: View {
                             Text(pokemon.name.capitalized)
                         }
                     }
+                    if viewModel.isLoadingMore {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                            .padding(.vertical, 8)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    } else {
+                        Color.clear
+                            .frame(height: 1)
+                            .onAppear {
+                                viewModel.loadMorePokemons()
+                            }
+                    }
                 }
             }
-            .navigationTitle("Pokédex")
-            .onAppear {
-                viewModel.getPokemons()
-            }
+        }
+        .navigationTitle("Pokédex")
+        .onAppear {
+            viewModel.getPokemons()
         }
     }
 }
+
 
 #Preview {
     HomeView()

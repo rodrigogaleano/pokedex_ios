@@ -6,9 +6,11 @@
 //
 
 struct PokemonList: Decodable {
+    let next: String?
     let pokemons: [Pokemon]
     
     private enum CodingKeys: String, CodingKey {
         case pokemons = "results"
+        case next
     }
 }
