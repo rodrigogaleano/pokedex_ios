@@ -20,7 +20,19 @@ struct HomeView: View {
                     List{
                         ForEach(viewModel.pokemons, id: \.name) { pokemon in
                             NavigationLink(destination: PokemonDetailsView(name: pokemon.name)) {
-                                Text(pokemon.name.capitalized)
+                                HStack(spacing: 12) {
+                                    AsyncImage(url: URL(string: pokemon.imageURL)) { image in
+                                        image
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                    } placeholder: {
+                                        ProgressView()
+                                            .scaleEffect(0.5)
+                                    }
+                                    .frame(width: 50, height: 50)
+                                    Text(pokemon.name.capitalized)
+                                        .font(.body)
+                                }
                             }
                         }
                         if viewModel.isLoadingMore {

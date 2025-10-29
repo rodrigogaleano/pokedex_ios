@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct PokemonDetailsView: View {
     private var name: String
     @StateObject private var viewModel = PokemonDetailsViewModel()
     @State private var selectedTab: Tab = .info
+    @State private var isShowingBack = false
     
     private enum Tab: String, CaseIterable, Identifiable {
         case info = "Info"
@@ -29,7 +31,32 @@ struct PokemonDetailsView: View {
                 ProgressView("Loading...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if let pokemonDetails = viewModel.pokemonDetails {
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 20) {
+                    if let frontURL = pokemonDetails.sprites.other?.showdown?.front_default,
+                       let backURL = pokemonDetails.sprites.other?.showdown?.back_default {
+                        
+                        WebImage(url: URL(string: isShowingBack ? backURL : frontURL)) { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                        } placeholder: {
+                            ProgressView()
+                                .scaleEffect(1.2)
+                        }
+                        .frame(width: 200, height: 200)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .gesture(
+                            DragGesture()
+                                .onEnded { value in
+                                    let threshold: CGFloat = 50
+                                    if abs(value.translation.width) > threshold {
+                                        withAnimation(.easeInOut(duration: 0.6)) {
+                                            isShowingBack.toggle()
+                                        }
+                                    }
+                                }
+                        )
+                    }
                     HStack(spacing: 8) {
                         ForEach(pokemonDetails.types, id: \.info.name) { type in
                             Text(type.info.name.capitalized)
@@ -41,6 +68,7 @@ struct PokemonDetailsView: View {
                     }
                     .padding(.horizontal)
                     .padding(.top, 8)
+                    .frame(maxWidth: .infinity, alignment: .center)
                     Picker("Tab", selection: $selectedTab) {
                         ForEach(Tab.allCases) { tab in
                             Text(tab.rawValue).tag(tab)
