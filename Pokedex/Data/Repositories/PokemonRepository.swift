@@ -21,4 +21,10 @@ struct PokemonRepository {
         let response: PokemonDetails = try await apiService.get(from: url)
         return response
     }
+    
+    func getPokemonSpecies(name: String) async throws -> PokemonSpecies {
+        let url = URL(string: "https://pokeapi.co/api/v2/pokemon-species/\(name)")!
+        let response: PokemonSpecies = try await apiService.get(from: url)
+        return response
+    }
 }

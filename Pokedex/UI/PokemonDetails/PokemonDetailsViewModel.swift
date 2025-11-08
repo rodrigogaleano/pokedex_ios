@@ -11,7 +11,8 @@ import Combine
 @MainActor
 final class PokemonDetailsViewModel: ObservableObject {
     @Published var isLoading = false
-    @Published var pokemonDetails : PokemonDetails?
+    @Published var pokemonBio: String = ""
+    @Published var pokemonDetails: PokemonDetails?
     
     private let repository = PokemonRepository()
     
@@ -20,10 +21,16 @@ final class PokemonDetailsViewModel: ObservableObject {
         
         Task {
             do {
-                let response = try await repository.getPokemonDetails(name: name)
-                self.pokemonDetails = response
+                async let detailsResponse = repository.getPokemonDetails(name: name)
+                async let speciesResponse = repository.getPokemonSpecies(name: name)
+                
+                let details = try await detailsResponse
+                let species = try await speciesResponse
+                
+                self.pokemonDetails = details
+                self.pokemonBio = species.bio ?? "No biography available."
             } catch {
-                self.pokemonDetails = nil
+                print("Error loading pokemon: \(error)")
             }
             self.isLoading = false
         }
