@@ -16,8 +16,11 @@ struct ItemsView: View {
                 if viewModel.isLoading {
                     LoadingView()
                 } else {
-                    List(viewModel.items, id: \.name) { item in
-                        ListItemView(imageURL: item.imageURL, text: item.name)
+                    List{
+                        ForEach(viewModel.items, id: \.name) { item in
+                            ListItemView(imageURL: item.imageURL, text: item.name)
+                        }
+                        PaginationTriggerView(isLoading: viewModel.isLoadingMore, onLoadMore: viewModel.loadMoreItems)
                     }
                 }
             }.navigationTitle("Items")

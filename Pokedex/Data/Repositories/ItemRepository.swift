@@ -8,8 +8,9 @@
 struct ItemRepository {
     private let apiService: APIService = APIService()
     
-    func getItems() async throws -> ItemList {
-        let response: ItemList = try await apiService.get(path: "/item")
+    func getItems(offset: Int = 0, limit: Int = 20) async throws -> ItemList {
+        let path = "/item?limit=\(limit)&offset=\(offset)"
+        let response: ItemList = try await apiService.get(path: path)
         return response
     }
 }

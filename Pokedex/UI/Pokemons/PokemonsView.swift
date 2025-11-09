@@ -22,18 +22,7 @@ struct PokemonsView: View {
                                 ListItemView(imageURL: pokemon.imageURL, text: pokemon.name)
                             }
                         }
-                        if viewModel.isLoadingMore {
-                            ProgressView()
-                                .scaleEffect(0.8)
-                                .padding(.vertical, 8)
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        } else {
-                            Color.clear
-                                .frame(height: 1)
-                                .onAppear {
-                                    viewModel.loadMorePokemons()
-                                }
-                        }
+                        PaginationTriggerView(isLoading: viewModel.isLoadingMore, onLoadMore: viewModel.loadMorePokemons)
                     }
                     
                 }
