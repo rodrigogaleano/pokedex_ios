@@ -7,32 +7,19 @@
 
 import SwiftUI
 
-struct HomeView: View {
-    @StateObject private var viewModel = HomeViewModel()
+struct PokemonsView: View {
+    @StateObject private var viewModel = PokemonsViewModel()
     
     var body: some View {
         NavigationView {
             VStack {
                 if viewModel.isLoading {
-                    ProgressView("Loading...")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    LoadingView()
                 } else {
                     List{
                         ForEach(viewModel.pokemons, id: \.name) { pokemon in
                             NavigationLink(destination: PokemonDetailsView(name: pokemon.name)) {
-                                HStack(spacing: 12) {
-                                    AsyncImage(url: URL(string: pokemon.imageURL)) { image in
-                                        image
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                    } placeholder: {
-                                        ProgressView()
-                                            .scaleEffect(0.5)
-                                    }
-                                    .frame(width: 50, height: 50)
-                                    Text(pokemon.name.capitalized)
-                                        .font(.body)
-                                }
+                                ListItemView(imageURL: pokemon.imageURL, text: pokemon.name)
                             }
                         }
                         if viewModel.isLoadingMore {
@@ -61,5 +48,5 @@ struct HomeView: View {
 
 
 #Preview {
-    HomeView()
+    PokemonsView()
 }

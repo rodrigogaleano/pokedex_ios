@@ -9,15 +9,19 @@ import Foundation
 import Combine
 
 @MainActor
-final class HomeViewModel: ObservableObject {
+final class PokemonsViewModel: ObservableObject {
     @Published var pokemons: [Pokemon] = []
     @Published var isLoading = false
     @Published var isLoadingMore = false
     
     private let repository = PokemonRepository()
-    private var nextURL: String?
     private var canLoadMore = true
     
+    private var currentOffset: Int {
+        return pokemons.count
+    }
+    
+  
     func getPokemons() {
         isLoading = true
         
@@ -25,7 +29,6 @@ final class HomeViewModel: ObservableObject {
             do {
                 let response = try await repository.getPokemons()
                 self.pokemons = response.pokemons
-                self.nextURL = response.next
                 self.canLoadMore = response.next != nil
             } catch {
                 print("Error fetching Pokemon: \(error)")
@@ -35,15 +38,14 @@ final class HomeViewModel: ObservableObject {
     }
     
     func loadMorePokemons() {
-        guard canLoadMore, !isLoadingMore, let nextURL = nextURL else { return }
+        guard canLoadMore, !isLoadingMore else { return }
         
         isLoadingMore = true
         
         Task {
             do {
-                let response = try await repository.getPokemons(url: nextURL)
+                let response = try await repository.getPokemons(offset: currentOffset)
                 self.pokemons.append(contentsOf: response.pokemons)
-                self.nextURL = response.next
                 self.canLoadMore = response.next != nil
             } catch {
                 print("Error loading more Pokemon: \(error)")

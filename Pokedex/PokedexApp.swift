@@ -11,7 +11,18 @@ import SwiftUI
 struct PokedexApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            TabView {
+                PokemonsView()
+                    .tabItem {
+                        Image(systemName: "list.bullet")
+                        Text("Pokémons")
+                    }
+                ItemsView()
+                    .tabItem {
+                        Image(systemName: "bag")
+                        Text("Items")
+                    }
+            }
         }
     }
 }

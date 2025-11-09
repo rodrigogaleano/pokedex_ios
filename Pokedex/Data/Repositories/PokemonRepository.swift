@@ -10,21 +10,23 @@ import Foundation
 struct PokemonRepository {
     private let apiService: APIService = APIService()
     
-    func getPokemons(url: String? = nil) async throws -> PokemonList {
-        let requestUrl = URL(string: url ?? "https://pokeapi.co/api/v2/pokemon")!
-        let response: PokemonList = try await apiService.get(from: requestUrl)
-        return response
+    func getPokemons(offset: Int = 0, limit: Int = 20) async throws -> PokemonList {
+        let path = "/pokemon?limit=\(limit)&offset=\(offset)"
+        return try await apiService.get(path: path)
     }
     
     func getPokemonDetails(name: String) async throws -> PokemonDetails {
-        let url = URL(string: "https://pokeapi.co/api/v2/pokemon/\(name)")!
-        let response: PokemonDetails = try await apiService.get(from: url)
+        let response: PokemonDetails = try await apiService.get(path: "/pokemon/\(name)")
         return response
     }
     
     func getPokemonSpecies(name: String) async throws -> PokemonSpecies {
-        let url = URL(string: "https://pokeapi.co/api/v2/pokemon-species/\(name)")!
-        let response: PokemonSpecies = try await apiService.get(from: url)
+        let response: PokemonSpecies = try await apiService.get(path: "/pokemon-species/\(name)")
         return response
+    }
+    
+    func searchPokemon(name: String) async throws -> Pokemon {
+        let response: PokemonDetails = try await apiService.get(path: "/pokemon/\(name.lowercased())")
+        return Pokemon(name: response.name, url: "https://pokeapi.co/api/v2/pokemon/\(response.id)/")
     }
 }
