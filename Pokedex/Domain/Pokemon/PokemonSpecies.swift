@@ -7,9 +7,8 @@
 
 import Foundation
 
-import Foundation
 struct PokemonSpecies: Decodable {
-    let flavorTextEntries: [FlavorTextEntry]
+    let flavorTextEntries: [PokemonFlavorTextEntry]
     
     enum CodingKeys: String, CodingKey {
         case flavorTextEntries = "flavor_text_entries"
@@ -26,7 +25,7 @@ struct PokemonSpecies: Decodable {
     }
 }
 
-struct FlavorTextEntry: Decodable {
+struct PokemonFlavorTextEntry: Decodable {
     let flavorText: String
     let language: Language
     
@@ -35,8 +34,3 @@ struct FlavorTextEntry: Decodable {
         case language
     }
 }
-
-struct Language: Decodable {
-    let name: String
-}
-

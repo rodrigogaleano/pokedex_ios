@@ -13,4 +13,10 @@ struct ItemRepository {
         let response: ItemList = try await apiService.get(path: path)
         return response
     }
+    
+    func getItemDetails(name: String) async throws -> ItemDetails {
+        let path = "/item/\(name)"
+        let response: ItemDetails = try await apiService.get(path: path)
+        return response
+    }
 }

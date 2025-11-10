@@ -7,6 +7,7 @@
 
 import Combine
 
+@MainActor
 final class ItemsViewModel: ObservableObject {
     @Published var items: [Item] = []
     @Published var isLoading: Bool = false

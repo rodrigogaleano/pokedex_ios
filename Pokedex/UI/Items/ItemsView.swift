@@ -17,8 +17,10 @@ struct ItemsView: View {
                     LoadingView()
                 } else {
                     List{
-                        ForEach(viewModel.items, id: \.name) { item in
-                            ListItemView(imageURL: item.imageURL, text: item.name)
+                        ForEach(Array(viewModel.items.enumerated()), id: \.offset) { index, item in
+                            NavigationLink(destination: ItemDetailsView(name: item.name)) {
+                                ListItemView(imageURL: item.imageURL, text: item.name)
+                            }
                         }
                         PaginationTriggerView(isLoading: viewModel.isLoadingMore, onLoadMore: viewModel.loadMoreItems)
                     }

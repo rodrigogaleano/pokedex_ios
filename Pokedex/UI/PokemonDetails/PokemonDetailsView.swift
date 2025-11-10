@@ -26,11 +26,7 @@ struct PokemonDetailsView: View {
                     }
                     HStack(spacing: 8) {
                         ForEach(pokemonDetails.types, id: \.info.name) { type in
-                            Text(type.info.name.capitalized)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(Color(uiColor: .tertiarySystemFill))
-                                .clipShape(Capsule())
+                            BadgeView(text: type.info.name.capitalized)
                         }
                     }
                     .padding(.horizontal)
@@ -57,8 +53,7 @@ struct PokemonDetailsView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .topLeading)
             } else {
-                Text("Something went wrong")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                ErrorView()
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
